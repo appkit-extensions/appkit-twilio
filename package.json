@@ -7,9 +7,7 @@
   "repository": "empty",
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "request": "^2.87.0"
-  },
+  "dependencies": {},
   "engines": {
     "appkit": "^1.0.0"
   },
@@ -22,5 +20,8 @@
         "script": "index.js"
       }
     ]
+  },
+  "devDependencies": {
+    "node-fetch": "^2.1.2"
   }
 }

@@ -1,4 +1,4 @@
-const request = require('request');
+// const fetch = require('node-fetch');
 
 module.exports = function client(accountSid, authToken) {
     const api = {
@@ -26,86 +26,51 @@ const Messaging = (accountSid, authToken) => (messageId) => {
     }
 }
 
-function messagesCreate(message, toNumber, fromNumber, accountSid, authToken) {
+async function messagesCreate(message, toNumber, fromNumber, accountSid, authToken) {
+
+    let body = '';
+    body += 'To=' + encodeURIComponent(toNumber) + '&';
+    body += 'From=' + encodeURIComponent(fromNumber) + '&';
+    body += 'Body=' + encodeURIComponent(message);
 
     const options = {
         method: 'POST',
-        form: {
-            To: toNumber,
-            From: fromNumber,
-            Body: message,
-        },
-        json: true,
+        body,
         headers: {
             "Authorization": "Basic " + new Buffer(accountSid + ':' + authToken).toString("base64"),
-            "Content-Type": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
         }
     }
 
-    const promise = new Promise((resolve, reject) => {
-        request.post(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/SMS/Messages.json`, options, (err, res, body) => {
-            if (err) {
-                reject(err);
-            } else if (body.code) {
-                reject(body);
-            } else {
-                resolve(body);
-            }
-        });
-    });
-    return promise;
+    const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/SMS/Messages.json`, options);
+    const json = await res.json();
+    return json;
 };
 
-function messagesFetch(messageId, accountSid, authToken) {
+async function messagesFetch(messageId, accountSid, authToken) {
 
     const options = {
         method: 'GET',
-        form: {
-        },
-        json: true,
         headers: {
             "Authorization": "Basic " + new Buffer(accountSid + ':' + authToken).toString("base64"),
-            "Content-Type": "application/json",
         }
     }
 
-    const promise = new Promise((resolve, reject) => {
-        request.get(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/SMS/Messages/${messageId}.json`, options, (err, res, body) => {
-            if (err) {
-                reject(err);
-            } else if (body.code) {
-                reject(body);
-            } else {
-                resolve(body);
-            }
-        });
-    });
-    return promise;
+    const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/SMS/Messages/${messageId}.json`, options);
+    const json = await res.json();
+    return json;
 };
 
-function messagesList(accountSid, authToken) {
+async function messagesList(accountSid, authToken) {
 
     const options = {
         method: 'GET',
-        form: {
-        },
-        json: true,
         headers: {
             "Authorization": "Basic " + new Buffer(accountSid + ':' + authToken).toString("base64"),
-            "Content-Type": "application/json",
         }
     }
 
-    const promise = new Promise((resolve, reject) => {
-        request(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/SMS/Messages.json`, options, (err, res, body) => {
-            if (err) {
-                reject(err);
-            } else if (body.code) {
-                reject(body);
-            } else {
-                resolve(body);
-            }
-        });
-    });
-    return promise;
+    const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/SMS/Messages.json`, options);
+    const json = await res.json();
+    return json;
 };
