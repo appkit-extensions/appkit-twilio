@@ -12,7 +12,7 @@ const client = Libs.twilio(accountSid, authToken);
 
 Send a message
 ```
-const msg = await client.messages.create({
+const message = await client.messages.create({
     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
     from: '+12223334444',
     to: '+17172012010'
